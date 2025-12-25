@@ -15,6 +15,7 @@
   networking.networkmanager.enable = true;
   time.timeZone = "Asia/Almaty";
   i18n.defaultLocale = "en_US.UTF-8";
+  
 
   # Графическая оболочка (KDE Plasma 6)
   services.xserver.enable = true;
@@ -29,6 +30,11 @@
     pulse.enable = true;
   };
 
+  # Автоматическое монтирование дисков
+  boot.supportedFilesystems = [ "ntfs" ];
+  services.gvfs.enable = true;
+  services.udisks2.enable = true;
+
   # Включение поддержки Bluetooth
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true; # Включать адаптер при загрузке
@@ -41,10 +47,9 @@
 
   # Системные пакеты (только самое необходимое)
   environment.systemPackages = with pkgs; [
-    vim
     wget
     git
-    crudini # Нужен для автоматической настройки клавиш
+    ntfs3g
   ];
 
   # Включаем Zsh на системном уровне (необходимо для работы shell)
@@ -71,6 +76,7 @@
       firefox-devedition
       fzf
       python315
+      udiskie
     ];
 
     # Kitty
