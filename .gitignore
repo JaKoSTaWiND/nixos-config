@@ -2,3 +2,7 @@
 *.swp
 *~
 result
+
+.direnv/
+
+hardware-configuration.nix

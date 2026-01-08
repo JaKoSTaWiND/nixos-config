@@ -4,7 +4,9 @@
   imports = [ 
     <home-manager/nixos>
     ./hardware-configuration.nix
+
     ./modules/postgresql.nix # PostgreSQL 18v 
+    ./modules/steam.nix # Steam
     
   ];
 
@@ -42,6 +44,20 @@
   # Утилита для управления (удобная иконка в трее)
   services.blueman.enable = true;
 
+  # Nvidia драйвера
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
+  hardware.nvidia = {
+    modesetting.enable = true;
+    open = false; 
+    nvidiaSettings = true;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
+
   # Разрешаем несвободные пакеты
   nixpkgs.config.allowUnfree = true;
 
@@ -60,7 +76,7 @@
     isNormalUser = true;
     shell = pkgs.zsh;
     description = "albedooverlord";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "gamemode" ];
   };
 
   # --- КОНФИГУРАЦИЯ HOME MANAGER ---
@@ -74,9 +90,15 @@
     # Программы для пользователя
     home.packages = with pkgs; [
       firefox-devedition
+      google-chrome
       fzf
       python315
       udiskie
+      discord
+
+      # java
+      jdk25_headless
+      maven
     ];
 
     # Kitty

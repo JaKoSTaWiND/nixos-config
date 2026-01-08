@@ -1,0 +1,3 @@
+{
+  username = "albedooverlord"; # Имя пользователя
+}

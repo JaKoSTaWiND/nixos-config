@@ -1,10 +1,11 @@
 { config, pkgs, ... }:
-
+let
+  vars = import ../variables.nix;
+in
 {
   services.postgresql = {
     enable = true;
-    package = pkgs.postgresql_18; 
-    
+    package = pkgs.postgresql_18;
 
     authentication = pkgs.lib.mkForce ''
       # TYPE  DATABASE        USER            ADDRESS                 METHOD
@@ -15,7 +16,7 @@
 
     ensureUsers = [
       {
-        name = "albedooverlord";
+        name = "${vars.username}";
         ensureClauses.superuser = true;
         ensureClauses.login = true;
       }
