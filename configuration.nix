@@ -1,13 +1,29 @@
 { config, pkgs, ... }:
 
+let
+  vars = import ./variables.nix;
+in
 {
   imports = [ 
     <home-manager/nixos>
     ./hardware-configuration.nix
 
-    ./modules/postgresql.nix # PostgreSQL 18v 
-    ./modules/steam.nix # Steam
+    # --- SYSTEM ---
+    ./modules/system/shell.nix # Zsh в терминале
+    ./modules/system/udiskie.nix # Udiskie для автомонтирование дисков
     
+    # --- PROGRAMMING_LANGUAGES ---
+    ./modules/programming_languages/python.nix # Python 3.15v
+    ./modules/programming_languages/java.nix # Java JDK 25v
+
+    ./modules/kitty.nix # Kitty terminal
+    ./modules/steam.nix # Steam
+    ./modules/vscode.nix # VSCode
+    ./modules/firefox_dev_edition.nix # Firefox
+    ./modules/chrome.nix # Chrome
+    ./modules/discord.nix # Discord
+
+    ./modules/postgresql.nix # PostgreSQL 18v 
   ];
 
   # Загрузчик и базовые настройки системы
@@ -17,7 +33,6 @@
   networking.networkmanager.enable = true;
   time.timeZone = "Asia/Almaty";
   i18n.defaultLocale = "en_US.UTF-8";
-  
 
   # Графическая оболочка (KDE Plasma 6)
   services.xserver.enable = true;
@@ -39,7 +54,7 @@
 
   # Включение поддержки Bluetooth
   hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true; # Включать адаптер при загрузке
+  hardware.bluetooth.powerOnBoot = true;
 
   # Утилита для управления (удобная иконка в трее)
   services.blueman.enable = true;
@@ -61,21 +76,18 @@
   # Разрешаем несвободные пакеты
   nixpkgs.config.allowUnfree = true;
 
-  # Системные пакеты (только самое необходимое)
+  # Системные пакеты (базовый минимум)
   environment.systemPackages = with pkgs; [
     wget
     git
     ntfs3g
   ];
 
-  # Включаем Zsh на системном уровне (необходимо для работы shell)
-  programs.zsh.enable = true;
-
   # Настройка пользователя
-  users.users.albedooverlord = {
+  users.users.${vars.username} = {
     isNormalUser = true;
     shell = pkgs.zsh;
-    description = "albedooverlord";
+    description = vars.username;
     extraGroups = [ "networkmanager" "wheel" "gamemode" ];
   };
 
@@ -84,57 +96,9 @@
   home-manager.useUserPackages = true;
   home-manager.backupFileExtension = "backup";
   
-  home-manager.users.albedooverlord = { pkgs, ... }: {
+  home-manager.users.${vars.username} = {
     home.stateVersion = "25.11";
-
-    # Программы для пользователя
-    home.packages = with pkgs; [
-      firefox-devedition
-      google-chrome
-      fzf
-      python315
-      udiskie
-      discord
-
-      # java
-      jdk25_headless
-      maven
-    ];
-
-    # Kitty
-    programs.kitty = {
-      enable = true;
-      font.name = "JetBrainsMono Nerd Font";
-      settings = {
-        background_opacity = "0.85";
-        confirm_os_window_close = 0;
-      };
-    };
-
-    # Zsh и Starship
-    programs.zsh = {
-      enable = true;
-      enableCompletion = true;
-      autosuggestion.enable = true;
-      syntaxHighlighting.enable = true;
-      initContent = ''
-        eval "$(starship init zsh)"
-      '';
-    };
-    programs.starship.enable = true;
-
-    # Vscode
-    programs.vscode = {
-      enable = true;
-      extensions = with pkgs.vscode-extensions; [
-        bbenoist.nix
-        ms-python.python
-      ];
-    }; 
-
   };
-
-
 
   # Шрифты
   fonts.packages = with pkgs; [
