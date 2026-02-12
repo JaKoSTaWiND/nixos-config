@@ -17,11 +17,17 @@ in
     ./modules/programming_languages/java.nix # Java JDK 25v
 
     ./modules/kitty.nix # Kitty terminal
+    ./modules/wave.nix # Wave terminal
     ./modules/steam.nix # Steam
     ./modules/vscode.nix # VSCode
     ./modules/firefox_dev_edition.nix # Firefox
     ./modules/chrome.nix # Chrome
     ./modules/discord.nix # Discord
+
+    ./modules/pdf4qt.nix # pdf4qt
+
+    ./modules/godot.nix # Godot Engine
+    ./modules/obsidian.nix # Obsidian
 
     ./modules/postgresql.nix # PostgreSQL 18v 
   ];
@@ -81,6 +87,8 @@ in
     wget
     git
     ntfs3g
+    pnpm
+    nodejs_24
   ];
 
   # Настройка пользователя
